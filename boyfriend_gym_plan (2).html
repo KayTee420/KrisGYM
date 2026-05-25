@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Gym Plan">
+<title>Gym Plan</title>
+<style>
+:root{
+  --blue:#378ADD;--blue-l:#E6F1FB;--blue-d:#0C447C;
+  --teal:#1D9E75;--teal-l:#E1F5EE;--teal-d:#085041;
+  --coral:#D85A30;--coral-l:#FAECE7;--coral-d:#712B13;
+  --purple:#7F77DD;--purple-l:#EEEDFE;--purple-d:#3C3489;
+  --amber:#BA7517;--amber-l:#FAEEDA;--amber-d:#633806;
+  --gray:#888780;--gray-l:#F1EFE8;--gray-d:#444441;
+  --bg:#f7f6f3;--card:#fff;--text:#1a1a18;--text2:#6b6b68;--text3:#a8a8a4;
+  --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.13);
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#111110;--card:#1c1c1a;--text:#f0ede8;--text2:#9a9994;--text3:#5a5a57;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --blue-l:#0a1e33;--blue-d:#90c4f7;--teal-l:#0a2218;--teal-d:#6fe0b8;
+  --coral-l:#2e1108;--coral-d:#f5a07a;--purple-l:#1a1840;--purple-d:#b8b4f0;
+  --amber-l:#231600;--amber-d:#f5c97a;--gray-l:#1e1e1c;--gray-d:#c0bfba;
+}}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,Helvetica,Arial,sans-serif;}
+body{max-width:480px;margin:0 auto;padding-bottom:48px;}
+button{font-family:-apple-system,Helvetica,Arial,sans-serif;-webkit-appearance:none;appearance:none;}
+.header{padding:52px 20px 16px;background:var(--card);border-bottom:1px solid var(--border);position:-webkit-sticky;position:sticky;top:0;z-index:20;}
+.hrow{display:-webkit-flex;display:flex;justify-content:space-between;align-items:flex-end;}
+.h1{font-size:26px;font-weight:700;letter-spacing:-0.5px;color:var(--text);}
+.hsub{font-size:13px;color:var(--text2);margin-top:2px;}
+.srow{display:-webkit-flex;display:flex;gap:6px;margin-top:12px;}
+.sbox{-webkit-flex:1;flex:1;background:var(--bg);border-radius:8px;padding:8px;text-align:center;}
+.sval{font-size:14px;font-weight:600;color:var(--text);}
+.slbl{font-size:10px;color:var(--text2);margin-top:1px;}
+.tabs{display:-webkit-flex;display:flex;gap:7px;padding:12px 16px;overflow-x:auto;background:var(--card);border-bottom:1px solid var(--border);-webkit-overflow-scrolling:touch;position:-webkit-sticky;position:sticky;top:114px;z-index:9;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{-webkit-flex-shrink:0;flex-shrink:0;padding:8px 16px;border-radius:20px;border:1px solid var(--border2);background:transparent;cursor:pointer;font-size:13px;font-weight:500;color:var(--text2);white-space:nowrap;}
+.main{padding:14px 16px 20px;}
+.prog-box{background:var(--card);border-radius:16px;border:1px solid var(--border);padding:14px 16px;margin-bottom:12px;}
+.prow{display:-webkit-flex;display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;}
+.prow span{font-size:13px;color:var(--text2);}
+.prow strong{font-size:13px;font-weight:600;color:var(--text);}
+.ptrack{height:6px;background:var(--border2);border-radius:3px;overflow:hidden;}
+.pfill{height:6px;border-radius:3px;}
+.sess-box{background:var(--card);border-radius:16px;border:1px solid var(--border);padding:16px;margin-bottom:12px;}
+.badge{display:inline-block;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.4px;}
+.stitle{font-size:21px;font-weight:700;letter-spacing:-0.3px;color:var(--text);}
+.smeta{font-size:13px;color:var(--text2);margin-top:6px;}
+.focus-wrap{margin-top:10px;}
+.ftag{display:inline-block;font-size:12px;font-weight:500;padding:4px 10px;border-radius:20px;margin-right:5px;margin-bottom:4px;}
+.tip-box{display:-webkit-flex;display:flex;gap:10px;background:var(--amber-l);border-radius:10px;padding:11px 13px;margin-bottom:12px;}
+.tip-box i{font-size:16px;color:var(--amber-d);-webkit-flex-shrink:0;flex-shrink:0;margin-top:1px;}
+.tip-box p{font-size:13px;color:var(--amber-d);line-height:1.45;}
+.sec-lbl{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.6px;margin:14px 0 8px;}
+.ex-box{background:var(--card);border-radius:16px;border:1px solid var(--border);padding:14px 16px;margin-bottom:9px;}
+.ex-top{display:-webkit-flex;display:flex;align-items:flex-start;gap:12px;}
+.ex-circle{width:28px;height:28px;border-radius:50%;border:2px solid var(--border2);background:transparent;cursor:pointer;display:-webkit-flex;display:flex;align-items:center;justify-content:center;-webkit-flex-shrink:0;flex-shrink:0;margin-top:2px;}
+.ex-circle svg{width:13px;height:13px;stroke:white;stroke-width:2.5;fill:none;opacity:0;}
+.ex-info{-webkit-flex:1;flex:1;}
+.ex-name{font-size:15px;font-weight:600;color:var(--text);line-height:1.3;}
+.ex-sub{font-size:12px;color:var(--text2);margin-top:2px;line-height:1.35;}
+.key-pill{display:inline-block;font-size:10px;background:var(--blue-l);color:var(--blue-d);border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:middle;font-weight:600;}
+.sets-wrap{display:-webkit-flex;display:flex;-webkit-flex-wrap:wrap;flex-wrap:wrap;gap:7px;margin-top:11px;align-items:center;}
+.set-btn{width:52px;height:44px;border-radius:10px;border:1px solid var(--border2);background:var(--bg);cursor:pointer;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;align-items:center;justify-content:center;gap:1px;}
+.snum{font-size:12px;font-weight:600;color:var(--text2);}
+.sreps{font-size:10px;color:var(--text3);}
+.sets-lbl{font-size:12px;color:var(--text3);}
+.rest-box{background:var(--card);border-radius:16px;border:1px solid var(--border);overflow:hidden;margin-bottom:9px;}
+.rrow{display:-webkit-flex;display:flex;gap:13px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--border);}
+.rrow:last-child{border-bottom:none;}
+.rico{width:38px;height:38px;border-radius:10px;background:var(--gray-l);display:-webkit-flex;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--gray-d);-webkit-flex-shrink:0;flex-shrink:0;}
+.rtxt p{font-size:14px;font-weight:600;color:var(--text);}
+.rtxt span{font-size:12px;color:var(--text2);margin-top:2px;display:block;}
+.notes-wrap{display:-webkit-flex;display:flex;-webkit-flex-wrap:wrap;flex-wrap:wrap;gap:8px;margin-top:8px;}
+.note-box{background:var(--card);border-radius:10px;border:1px solid var(--border);padding:12px;width:calc(50% - 4px);}
+.note-box strong{font-size:12px;font-weight:600;color:var(--text);display:block;margin-bottom:3px;}
+.note-box p{font-size:12px;color:var(--text2);line-height:1.4;}
+.surplus{background:var(--blue-l);border-radius:10px;padding:13px 15px;margin-bottom:12px;display:-webkit-flex;display:flex;gap:10px;}
+.surplus i{font-size:20px;color:var(--blue-d);-webkit-flex-shrink:0;flex-shrink:0;margin-top:1px;}
+.surplus p{font-size:13px;color:var(--blue-d);line-height:1.5;}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+</head>
+<body>
+
+<div class="header">
+  <div class="hrow">
+    <div class="h1">Gym plan</div>
+    <span id="date-lbl" style="font-size:13px;color:var(--text2);"></span>
+  </div>
+  <div class="hsub">Male &middot; 18&ndash;25 &middot; Lean &middot; Muscle &amp; size &middot; No cables</div>
+  <div class="srow">
+    <div class="sbox"><div class="sval">4</div><div class="slbl">days/week</div></div>
+    <div class="sbox"><div class="sval">60'</div><div class="slbl">per session</div></div>
+    <div class="sbox"><div class="sval">3x</div><div class="slbl">upper/week</div></div>
+    <div class="sbox"><div class="sval">1x</div><div class="slbl">legs/week</div></div>
+  </div>
+</div>
+
+<div class="tabs" id="tabs">
+  <button class="tab" id="tb-mon" onclick="sw('mon')">Mon</button>
+  <button class="tab" id="tb-tue" onclick="sw('tue')">Tue</button>
+  <button class="tab" id="tb-thu" onclick="sw('thu')">Thu</button>
+  <button class="tab" id="tb-fri" onclick="sw('fri')">Fri</button>
+  <button class="tab" id="tb-rest" onclick="sw('rest')">Rest</button>
+</div>
+
+<div class="main" id="main"></div>
+
+<script>
+var now = new Date();
+var wd = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+var mo = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+document.getElementById('date-lbl').textContent = wd[now.getDay()] + ' ' + now.getDate() + ' ' + mo[now.getMonth()];
+
+var PLAN = {
+  mon:{
+    label:'Monday', dur:'60-65 min',
+    badgeSt:'background:#E6F1FB;color:#0C447C', badgeTx:'Chest & triceps - power',
+    tabBg:'#378ADD', progCol:'#378ADD',
+    focus:[{t:'Chest',s:'background:#E6F1FB;color:#0C447C'},{t:'Triceps',s:'background:#EEEDFE;color:#3C3489'},{t:'Heavy',s:'background:#FAECE7;color:#712B13'}],
+    tip:'Rest 2-3 min between sets. Going heavy with full recovery builds chest size. Feel the stretch at the bottom of every press.',
+    secs:[
+      {title:'Main lifts', ex:[
+        {n:'Barbell bench press',s:'Primary chest builder - go heavy',sets:5,r:'5',k:true},
+        {n:'Incline barbell press',s:'Upper chest - slightly narrow grip',sets:4,r:'6-8',k:true},
+        {n:'Dumbbell bench press',s:'Chest - full stretch at bottom',sets:3,r:'8-10',k:false}
+      ]},
+      {title:'Isolation & arms', ex:[
+        {n:'Dumbbell fly',s:'Chest stretch and squeeze - light, controlled',sets:3,r:'12-15',k:false},
+        {n:'Skull crusher (EZ bar)',s:'Tricep long head - key for arm size',sets:4,r:'8-10',k:false},
+        {n:'Close-grip bench press',s:'Tricep compound - keep elbows tucked',sets:3,r:'10-12',k:false}
+      ]}
+    ]
+  },
+  tue:{
+    label:'Tuesday', dur:'60-65 min',
+    badgeSt:'background:#FAECE7;color:#712B13', badgeTx:'Back & biceps - power',
+    tabBg:'#D85A30', progCol:'#D85A30',
+    focus:[{t:'Back',s:'background:#FAECE7;color:#712B13'},{t:'Biceps',s:'background:#FBEAF0;color:#72243E'},{t:'Heavy',s:'background:#F1EFE8;color:#444441'}],
+    tip:'Pull-ups are your best back exercise. If 3 sets feel easy, add a dumbbell between your feet. A strong back makes your whole upper body look bigger.',
+    secs:[
+      {title:'Main lifts', ex:[
+        {n:'Weighted pull-up',s:'Best back builder - full range of motion',sets:5,r:'5-6',k:true},
+        {n:'Barbell bent-over row',s:'Upper back thickness - overhand grip',sets:4,r:'6-8',k:true},
+        {n:'Dumbbell single-arm row',s:'Unilateral back - brace on bench',sets:3,r:'8-10',k:false}
+      ]},
+      {title:'Biceps & rear delts', ex:[
+        {n:'Barbell curl',s:'Bicep mass - strict form, no swinging',sets:4,r:'8-10',k:true},
+        {n:'Incline dumbbell curl',s:'Bicep stretch - lie on incline bench',sets:3,r:'10-12',k:false},
+        {n:'Dumbbell rear delt fly',s:'Rear delt - slight bend in elbows',sets:3,r:'15',k:false}
+      ]}
+    ]
+  },
+  thu:{
+    label:'Thursday', dur:'55-60 min',
+    badgeSt:'background:#E1F5EE;color:#085041', badgeTx:'Chest & biceps - hypertrophy',
+    tabBg:'#1D9E75', progCol:'#1D9E75',
+    focus:[{t:'Chest volume',s:'background:#E1F5EE;color:#085041'},{t:'Bicep peak',s:'background:#FBEAF0;color:#72243E'},{t:'Pump work',s:'background:#EEEDFE;color:#3C3489'}],
+    tip:'Shorter rest today - 60-75s between sets. Goal is volume and pump. This is where chest and bicep size is built over time.',
+    secs:[
+      {title:'Chest volume', ex:[
+        {n:'Incline dumbbell press',s:'Upper chest - 4 sec lowering',sets:4,r:'10-12',k:true},
+        {n:'Flat dumbbell press',s:'Full chest - squeeze at top',sets:3,r:'12',k:false},
+        {n:'Dumbbell fly',s:'Wide arc - feel the chest stretch',sets:3,r:'12-15',k:false},
+        {n:'Push-up (weighted or feet elevated)',s:'Chest burnout to finish',sets:3,r:'max',k:false}
+      ]},
+      {title:'Biceps peak', ex:[
+        {n:'Dumbbell hammer curl',s:'Brachialis - adds arm thickness',sets:3,r:'12',k:false},
+        {n:'Concentration curl',s:'Bicep peak - elbow on inner thigh',sets:3,r:'12-15',k:true},
+        {n:'Reverse curl (barbell or dumbbell)',s:'Forearm and brachialis - underrated for arm size',sets:3,r:'12',k:false}
+      ]}
+    ]
+  },
+  fri:{
+    label:'Friday', dur:'60-65 min',
+    badgeSt:'background:#EEEDFE;color:#3C3489', badgeTx:'Shoulders, back & legs',
+    tabBg:'#7F77DD', progCol:'#7F77DD',
+    focus:[{t:'Shoulders',s:'background:#EEEDFE;color:#3C3489'},{t:'Back width',s:'background:#FAECE7;color:#712B13'},{t:'Legs maintenance',s:'background:#F1EFE8;color:#444441'}],
+    tip:'Big shoulders make you look wider instantly. Press heavy first while fresh. Legs today are maintenance only - enough to stay strong without hurting upper body recovery.',
+    secs:[
+      {title:'Shoulders', ex:[
+        {n:'Overhead barbell press',s:'Shoulder mass - brace core, no arching',sets:4,r:'6-8',k:true},
+        {n:'Dumbbell shoulder press',s:'Shoulder volume - controlled descent',sets:3,r:'10-12',k:false},
+        {n:'Lateral raises (dumbbell)',s:'Side delt width - slight forward lean',sets:4,r:'15-20',k:false}
+      ]},
+      {title:'Back width', ex:[
+        {n:'Pull-up (bodyweight)',s:'Back width - wide grip, full hang',sets:4,r:'8-10',k:false},
+        {n:'Chest-supported dumbbell row',s:'Upper back - chest on incline bench',sets:3,r:'12',k:false}
+      ]},
+      {title:'Legs maintenance', ex:[
+        {n:'Barbell back squat',s:'Leg strength - not to failure',sets:3,r:'8',k:false},
+        {n:'Romanian deadlift',s:'Hamstring and glute - controlled',sets:3,r:'10',k:false},
+        {n:'Leg press (machine)',s:'Quad volume - feet shoulder width',sets:2,r:'12-15',k:false}
+      ]}
+    ]
+  }
+};
+
+var setsDone = {};
+var currentDay = 'mon';
+
+function sk(d,si,ei,i){ return d+'-'+si+'-'+ei+'-'+i; }
+
+function totalSets(day) {
+  if (!PLAN[day]) return 0;
+  var t = 0;
+  for (var s=0;s<PLAN[day].secs.length;s++)
+    for (var e=0;e<PLAN[day].secs[s].ex.length;e++)
+      t += PLAN[day].secs[s].ex[e].sets;
+  return t;
+}
+
+function countDone(day) {
+  if (!PLAN[day]) return 0;
+  var d=0;
+  for (var s=0;s<PLAN[day].secs.length;s++)
+    for (var e=0;e<PLAN[day].secs[s].ex.length;e++)
+      for (var i=0;i<PLAN[day].secs[s].ex[e].sets;i++)
+        if (setsDone[sk(day,s,e,i)]) d++;
+  return d;
+}
+
+function togSet(day,si,ei,i) {
+  var k = sk(day,si,ei,i);
+  setsDone[k] = !setsDone[k];
+  render();
+}
+
+function togEx(day,si,ei) {
+  var ex = PLAN[day].secs[si].ex[ei];
+  var all=true;
+  for (var i=0;i<ex.sets;i++) if (!setsDone[sk(day,si,ei,i)]) { all=false; break; }
+  for (var j=0;j<ex.sets;j++) setsDone[sk(day,si,ei,j)] = !all;
+  render();
+}
+
+function sw(day) { currentDay = day; render(); }
+
+var tabDays = ['mon','tue','thu','fri','rest'];
+var tabColors = {mon:'#378ADD',tue:'#D85A30',thu:'#1D9E75',fri:'#7F77DD',rest:'#888780'};
+
+function render() {
+  var day = currentDay;
+  for (var t=0;t<tabDays.length;t++) {
+    var el = document.getElementById('tb-'+tabDays[t]);
+    if (tabDays[t] === day) {
+      el.style.background = tabColors[tabDays[t]];
+      el.style.color = 'white';
+      el.style.borderColor = 'transparent';
+    } else {
+      el.style.background = 'transparent';
+      el.style.color = 'var(--text2)';
+      el.style.borderColor = 'var(--border2)';
+    }
+  }
+
+  var main = document.getElementById('main');
+
+  if (day === 'rest') {
+    main.innerHTML = '<div class="sess-box">'
+      + '<span class="badge" style="background:var(--gray-l);color:var(--gray-d)">Recovery</span>'
+      + '<div class="stitle">Rest days</div>'
+      + '<div class="smeta">Wed, Sat, Sun</div>'
+      + '</div>'
+      + '<div class="tip-box"><i class="ti ti-bulb"></i><p>Muscle is built during rest, not training. These days are when you actually get bigger - do not skip sleep or under-eat.</p></div>'
+      + '<div class="rest-box">'
+      + '<div class="rrow"><div class="rico"><i class="ti ti-walk"></i></div><div class="rtxt"><p>Light walk</p><span>20-30 min - keeps blood flowing to muscles</span></div></div>'
+      + '<div class="rrow"><div class="rico"><i class="ti ti-stretching"></i></div><div class="rtxt"><p>Chest and shoulder stretch</p><span>Doorway stretch, cross-body arm - 10-15 min</span></div></div>'
+      + '<div class="rrow"><div class="rico"><i class="ti ti-ripple"></i></div><div class="rtxt"><p>Foam rolling</p><span>Upper back, lats, biceps - 10 min</span></div></div>'
+      + '</div>'
+      + '<div class="sec-lbl">Key reminders for muscle gain</div>'
+      + '<div class="surplus"><i class="ti ti-meat"></i><p><strong>Eat in a calorie surplus.</strong> You need 3,000-3,200 kcal per day with 150g+ protein. Without enough food, no training will make you bigger.</p></div>'
+      + '<div class="notes-wrap">'
+      + '<div class="note-box"><strong>Progressive overload</strong><p>Add weight or a rep every week. The only way to keep growing.</p></div>'
+      + '<div class="note-box"><strong>Sleep</strong><p>8h minimum. Growth hormone releases during deep sleep.</p></div>'
+      + '<div class="note-box"><strong>Protein timing</strong><p>Eat protein within 1-2h after training. Eggs, chicken, or a shake.</p></div>'
+      + '<div class="note-box"><strong>Rest periods</strong><p>2-3 min on heavy days. 60-75s on hypertrophy days.</p></div>'
+      + '</div>';
+    return;
+  }
+
+  var d = PLAN[day];
+  var total = totalSets(day);
+  var done = countDone(day);
+  var pct = total > 0 ? Math.round(done/total*100) : 0;
+
+  var focusHTML = '';
+  for (var f=0;f<d.focus.length;f++)
+    focusHTML += '<span class="ftag" style="'+d.focus[f].s+'">'+d.focus[f].t+'</span>';
+
+  var secsHTML = '';
+  for (var si=0;si<d.secs.length;si++) {
+    var sec = d.secs[si];
+    secsHTML += '<div class="sec-lbl">'+sec.title+'</div>';
+    for (var ei=0;ei<sec.ex.length;ei++) {
+      var ex = sec.ex[ei];
+      var allDone = true;
+      for (var ci=0;ci<ex.sets;ci++) if (!setsDone[sk(day,si,ei,ci)]) { allDone=false; break; }
+      var chips='';
+      for (var s2=0;s2<ex.sets;s2++) {
+        var done2 = !!setsDone[sk(day,si,ei,s2)];
+        var btnSt = done2
+          ? 'background:var(--teal-l);border-color:var(--teal);'
+          : 'background:var(--bg);border-color:var(--border2);';
+        var numCol = done2 ? 'color:var(--teal-d);' : 'color:var(--text2);';
+        var repCol = done2 ? 'color:var(--teal);' : 'color:var(--text3);';
+        chips += '<button class="set-btn" style="'+btnSt+'" onclick="togSet(\''+day+'\','+si+','+ei+','+s2+')">'
+          + '<span class="snum" style="'+numCol+'">S'+(s2+1)+'</span>'
+          + '<span class="sreps" style="'+repCol+'">'+(done2?'done':ex.r)+'</span>'
+          + '</button>';
+      }
+      var circSt = allDone
+        ? 'background:var(--teal);border-color:var(--teal);'
+        : 'background:transparent;border-color:var(--border2);';
+      var svgOp = allDone ? '1' : '0';
+      var boxSt = allDone ? 'border-color:var(--teal);' : '';
+      var nameSt = allDone ? 'color:var(--text3);text-decoration:line-through;' : '';
+      secsHTML += '<div class="ex-box" style="background:var(--card);border-radius:16px;border:1px solid var(--border);'+boxSt+'padding:14px 16px;margin-bottom:9px;">'
+        + '<div class="ex-top">'
+        + '<div class="ex-circle" style="'+circSt+'" onclick="togEx(\''+day+'\','+si+','+ei+')">'
+        + '<svg viewBox="0 0 13 13" style="opacity:'+svgOp+'"><polyline points="2,6.5 5,10 11,3"/></svg>'
+        + '</div>'
+        + '<div class="ex-info">'
+        + '<div class="ex-name" style="'+nameSt+'">'+ex.n+(ex.k?'<span class="key-pill">key lift</span>':'')+'</div>'
+        + '<div class="ex-sub">'+ex.s+'</div>'
+        + '</div>'
+        + '</div>'
+        + '<div class="sets-wrap">'+chips+'<span class="sets-lbl">'+ex.sets+' x '+ex.r+'</span></div>'
+        + '</div>';
+    }
+  }
+
+  main.innerHTML = '<div class="prog-box">'
+    + '<div class="prow"><span>Session progress</span><strong>'+done+' / '+total+' sets</strong></div>'
+    + '<div class="ptrack"><div class="pfill" style="width:'+pct+'%;background:'+d.progCol+';"></div></div>'
+    + '</div>'
+    + '<div class="sess-box">'
+    + '<span class="badge" style="'+d.badgeSt+'">'+d.badgeTx+'</span>'
+    + '<div class="stitle">'+d.label+'</div>'
+    + '<div class="smeta">'+d.dur+'</div>'
+    + '<div class="focus-wrap">'+focusHTML+'</div>'
+    + '</div>'
+    + '<div class="tip-box"><i class="ti ti-bulb"></i><p>'+d.tip+'</p></div>'
+    + secsHTML;
+}
+
+render();
+</script>
+</body>
+</html>
